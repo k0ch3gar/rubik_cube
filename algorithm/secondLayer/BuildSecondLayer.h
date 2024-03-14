@@ -10,10 +10,6 @@
 class BuildSecondEdges {
 public:
     static void buildSecondEdges(Camera* camera, Rubik* rubik, int ind);
-    static void yellowEdgesFlips(Camera* camera, Rubik* rubik);
-    static void moveYellowEdges(Camera* camera, Rubik* rubik);
-    static void moveYellowCorners(Camera* camera, Rubik* rubik);
-    static void rotateYellowCorners(Camera* camera, Rubik* rubik);
 };
 
 
