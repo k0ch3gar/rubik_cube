@@ -3,25 +3,23 @@
 //
 
 #include "BasicAlgorithm.h"
-#include <iostream>
 
-void BasicAlgorithm::pifPaf(Camera* camera, Rubik* rubik, vec3 axisR, vec3 axisU) {
+void BasicAlgorithm::pifPaf(vec3 axisR, vec3 axisU) {
     int sign1 = axisR.x + axisR.y + axisR.z;
     int sign2 = axisU.x + axisU.y + axisU.z;
-    Rotation::rotateLayer(camera, rubik, axisR, -90.0f * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, -90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisR, 90.0f * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, 90.0f * sign2);
+    Rotation::rotateLayer( axisR, -90.0f * sign1);
+    Rotation::rotateLayer( axisU, -90.0f * sign2);
+    Rotation::rotateLayer( axisR, 90.0f * sign1);
+    Rotation::rotateLayer( axisU, 90.0f * sign2);
 
 }
 
-vec3 BasicAlgorithm::findCube(Rubik &rubik, int index) {
+vec3 BasicAlgorithm::findCube(int index) {
 
     for (int x = 0; x < 3; x++) {
         for (int y = 0; y < 3; y++) {
             for (int z = 0; z < 3; z++) {
-                if (rubik.cubes[x][y][z].index == index) {
-                    //std::cout << x << ' ' << y << ' ' << z << '\n';
+                if (Rubik::getCube(vec3(x,y,z))->index == index) {
                     return vec3(x, y, z);
                 }
             }
@@ -32,16 +30,16 @@ vec3 BasicAlgorithm::findCube(Rubik &rubik, int index) {
 
 vec3 BasicAlgorithm::getIndVec(Cube *cube, int ind) {
     if (ind == 7) {
-        return -cube->right;
+        return -cube->getVector(Rubik::R);
     }
     if (ind == 25) {
-        return cube->right;
+        return cube->getVector(Rubik::R);
     }
     if (ind == 15) {
-        return -cube->front;
+        return -cube->getVector(Rubik::F);
     }
     if (ind == 17) {
-        return cube->front;
+        return cube->getVector(Rubik::F);
     }
     if (ind == 6) {
         return vec3(0, 2, 0);
@@ -58,85 +56,84 @@ vec3 BasicAlgorithm::getIndVec(Cube *cube, int ind) {
     return glm::vec3();
 }
 
-void BasicAlgorithm::secondEdgePlacementR(Camera *camera, Rubik *rubik, vec3 axisR, vec3 axisU, vec3 axisF) {
+void BasicAlgorithm::secondEdgePlacementR(vec3 axisR, vec3 axisU, vec3 axisF) {
     int sign1 = axisR.x + axisR.y + axisR.z;
     int sign2 = axisU.x + axisU.y + axisU.z;
     int sign3 = axisF.x + axisF.y + axisF.z;
 
-    Rotation::rotateLayer(camera, rubik, axisU, -90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisR, -90.0f * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, 90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisR, 90.0f * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, 90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisF, 90.0f * sign3);
-    Rotation::rotateLayer(camera, rubik, axisU, -90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisF, -90.0f * sign3);
+    Rotation::rotateLayer(axisU, -90.0f * sign2);
+    Rotation::rotateLayer( axisR, -90.0f * sign1);
+    Rotation::rotateLayer( axisU, 90.0f * sign2);
+    Rotation::rotateLayer( axisR, 90.0f * sign1);
+    Rotation::rotateLayer( axisU, 90.0f * sign2);
+    Rotation::rotateLayer( axisF, 90.0f * sign3);
+    Rotation::rotateLayer( axisU, -90.0f * sign2);
+    Rotation::rotateLayer( axisF, -90.0f * sign3);
 
 }
 
-void BasicAlgorithm::secondEdgePlacementL(Camera *camera, Rubik *rubik, vec3 axisL, vec3 axisU, vec3 axisF) {
+void BasicAlgorithm::secondEdgePlacementL( vec3 axisL, vec3 axisU, vec3 axisF) {
     int sign1 = axisL.x + axisL.y + axisL.z;
     int sign2 = axisU.x + axisU.y + axisU.z;
     int sign3 = axisF.x + axisF.y + axisF.z;
 
-    Rotation::rotateLayer(camera, rubik, axisU, 90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisL, 90.0f * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, -90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisL, -90.0f * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, -90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisF, -90.0f * sign3);
-    Rotation::rotateLayer(camera, rubik, axisU, 90.0f * sign2);
-    Rotation::rotateLayer(camera, rubik, axisF, 90.0f * sign3);
+    Rotation::rotateLayer( axisU, 90.0f * sign2);
+    Rotation::rotateLayer( axisL, 90.0f * sign1);
+    Rotation::rotateLayer( axisU, -90.0f * sign2);
+    Rotation::rotateLayer( axisL, -90.0f * sign1);
+    Rotation::rotateLayer( axisU, -90.0f * sign2);
+    Rotation::rotateLayer( axisF, -90.0f * sign3);
+    Rotation::rotateLayer( axisU, 90.0f * sign2);
+    Rotation::rotateLayer( axisF, 90.0f * sign3);
 }
 
-void BasicAlgorithm::yellowEdgesFlip(Camera *camera, Rubik *rubik, vec3 axisR, vec3 axisU, vec3 axisF, int type) {
+void BasicAlgorithm::yellowEdgesFlip(vec3 axisR, vec3 axisU, vec3 axisF, int type) {
 
     int sign1 = axisR.x + axisR.y + axisR.z;
-    int sign2 = axisU.x + axisU.y + axisU.z;
     int sign3 = axisF.x + axisF.y + axisF.z;
 
-    Rotation::rotateLayer(camera, rubik, axisF, -90 * sign3);
+    Rotation::rotateLayer( axisF, -90 * sign3);
     if (type == 2) {
-        Rotation::rotateLayer(camera, rubik, axisR, -90 * sign1);
-        Rotation::rotateLayer(camera, rubik, axisU, 90);
-        Rotation::rotateLayer(camera, rubik, axisR, 90 * sign1);
-        Rotation::rotateLayer(camera, rubik, axisU, -90);
+        Rotation::rotateLayer( axisR, -90 * sign1);
+        Rotation::rotateLayer( axisU, 90);
+        Rotation::rotateLayer( axisR, 90 * sign1);
+        Rotation::rotateLayer( axisU, -90);
     }
     else {
-        Rotation::rotateLayer(camera, rubik, axisU, 90);
-        Rotation::rotateLayer(camera, rubik, axisR, -90 * sign1);
-        Rotation::rotateLayer(camera, rubik, axisU, -90);
-        Rotation::rotateLayer(camera, rubik, axisR, 90 * sign1);
+        Rotation::rotateLayer( axisU, 90);
+        Rotation::rotateLayer( axisR, -90 * sign1);
+        Rotation::rotateLayer( axisU, -90);
+        Rotation::rotateLayer( axisR, 90 * sign1);
     }
-    Rotation::rotateLayer(camera, rubik, axisF, 90 * sign3);
+    Rotation::rotateLayer( axisF, 90 * sign3);
 }
 
-void BasicAlgorithm::moveYellowEdges(Camera *camera, Rubik *rubik, vec3 axisR, vec3 axisU) {
+void BasicAlgorithm::moveYellowEdges( vec3 axisR, vec3 axisU) {
     int sign1 = axisR.x + axisR.y + axisR.z;
 
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisR, -90 * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisR, 90 * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisR, -90 * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisR, 90 * sign1);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisR, -90 * sign1);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisR, 90 * sign1);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisR, -90 * sign1);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisR, 90 * sign1);
 }
 
-void BasicAlgorithm::moveYellowCorners(Camera *camera, Rubik *rubik, vec3 axisR, vec3 axisU, vec3 axisL) {
+void BasicAlgorithm::moveYellowCorners( vec3 axisR, vec3 axisU, vec3 axisL) {
     int sign1 = axisR.x + axisR.y + axisR.z;
     int sign2 = axisL.x + axisL.y + axisL.z;
 
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisR, -90 * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, -90);
-    Rotation::rotateLayer(camera, rubik, axisL, 90 * sign2);
-    Rotation::rotateLayer(camera, rubik, axisU, 90);
-    Rotation::rotateLayer(camera, rubik, axisR, 90 * sign1);
-    Rotation::rotateLayer(camera, rubik, axisU, -90);
-    Rotation::rotateLayer(camera, rubik, axisL, -90 * sign2);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisR, -90 * sign1);
+    Rotation::rotateLayer( axisU, -90);
+    Rotation::rotateLayer( axisL, 90 * sign2);
+    Rotation::rotateLayer( axisU, 90);
+    Rotation::rotateLayer( axisR, 90 * sign1);
+    Rotation::rotateLayer( axisU, -90);
+    Rotation::rotateLayer( axisL, -90 * sign2);
 }
 
 

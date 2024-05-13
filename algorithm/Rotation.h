@@ -6,12 +6,15 @@
 #define RUBIK_CUBE_ROTATION_H
 
 #include "basicAlgorithm/BasicAlgorithm.h"
+#include "../logger/Logger.h"
 
 class Rotation {
-
+    static int rotationSpeed;
+    static Shader* shader;
 public:
-
-    static void rotateLayer(Camera* camera, Rubik* rubik, vec3 rotationAxis, GLfloat angle);
+    static void setShader(Shader* shader1);
+    static void rotateLayer(vec3 rotationAxis, GLfloat angle);
+    static void setRotationSpeed(int speed);
 };
 
 

@@ -1,13 +1,6 @@
-#include <iostream>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include <glm/ext.hpp>
-#include <vector>
-#include <thread>
-
-
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -16,96 +9,99 @@
 #include "graphics/Shader.h"
 #include "camera/Camera.h"
 #include "rubik/Rubik.h"
-#include "algorithm/basicAlgorithm/BasicAlgorithm.h"
-#include "algorithm/firstLayer/FirstLayer.h"
-#include "algorithm/secondLayer/BuildSecondEdges.h"
+#include "algorithm/RubikAlgorithm.h"
+#include "algorithm/FileReader.h"
+#include "logger/Logger.h"
 
 
 int WIDTH = 1280;
 int HEIGHT = 720;
 
+
 int main() {
+
     Window::init(WIDTH, HEIGHT, "title");
     EventHandler::init();
 
     glClearColor(0,0,0,1);
+    glEnable(GL_DEPTH_TEST);
+    auto* shader = new Shader("../res/main.glslv", "../res/main.glslf");
+    Camera::init(vec3(0,0,1), 70, 10.0f);
+    Rubik::init();
 
-    Camera* camera = new Camera(vec3(0,0,2), 70, 10.0f);
-    Rubik* rubik = new Rubik(camera);
-
-
+    Rotation::setShader(shader);
 
     while (!Window::isShouldClose()) {
         EventHandler::pullEvents();
         if (EventHandler::isJustPressed(GLFW_KEY_ESCAPE)) {
             Window::setShouldClose(true);
         }
-        glEnable(GL_DEPTH_TEST);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        if (EventHandler::isJustClicked(GLFW_MOUSE_BUTTON_1)) {
-            std::cout << (float)(EventHandler::x - WIDTH / 2) / WIDTH * 2 << ' ';
-            std::cout << (float)(HEIGHT / 2 - EventHandler::y) / WIDTH * 2<< '\n';
-        }
 
         if (EventHandler::isPressed(GLFW_KEY_S)) {
-            camera->pitch -= 0.005f;
+            Camera::setCameraAngle(-0.001f, 0);
         }
         if (EventHandler::isPressed(GLFW_KEY_W)) {
-            camera->pitch += 0.005f;
+            Camera::setCameraAngle(0.001f, 0);
         }
         if (EventHandler::isPressed(GLFW_KEY_D)) {
-            camera->yaw += 0.005f;
+            Camera::setCameraAngle(0, 0.001f);
         }
         if (EventHandler::isPressed(GLFW_KEY_A)) {
-            camera->yaw -= 0.005f;
+            Camera::setCameraAngle(0, -0.001f);
         }
+
+        if (EventHandler::isJustPressed(GLFW_KEY_P)) {
+            FileReader::read("in.txt");
+            FileReader::use();
+        }
+
         if (EventHandler::isJustPressed(GLFW_KEY_F)) {
-            //BasicAlgorithm::pifPaf(camera, rubik, vec3(1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-            while (!FirstLayer::isWhiteCrossCorrect(rubik)) {
-                FirstLayer::buildWhiteEdges(camera, rubik, 7);
-                FirstLayer::buildWhiteEdges(camera, rubik, 15);
-                FirstLayer::buildWhiteEdges(camera, rubik, 17);
-                FirstLayer::buildWhiteEdges(camera, rubik, 25);
-            }
-
-            FirstLayer::buildWhiteLayer(camera, rubik, 6);
-            FirstLayer::buildWhiteLayer(camera, rubik, 8);
-            FirstLayer::buildWhiteLayer(camera, rubik, 24);
-            FirstLayer::buildWhiteLayer(camera, rubik, 26);
-
-            BuildSecondEdges::buildSecondEdges(camera, rubik, 3);
-            BuildSecondEdges::buildSecondEdges(camera, rubik, 5);
-            BuildSecondEdges::buildSecondEdges(camera, rubik, 21);
-            BuildSecondEdges::buildSecondEdges(camera, rubik, 23);
-
-            BuildSecondEdges::yellowEdgesFlips(camera, rubik);
-            BuildSecondEdges::moveYellowEdges(camera, rubik);
-            BuildSecondEdges::moveYellowCorners(camera, rubik);
-            BuildSecondEdges::rotateYellowCorners(camera, rubik);
+            Logger::print(vec3(0,0,0), 0);
+            RubikAlgorithm::solve();
+            Logger::print(vec3(0,0,0), 0);
         }
+        if (EventHandler::isJustPressed(GLFW_KEY_Q)) {
+            Logger::print(vec3(0,0,0), 0);
+            Scramble::scrumbleRubik();
+            Logger::print(vec3(0,0,0), 0);
+        }
+
+        if (EventHandler::isJustPressed(GLFW_KEY_EQUAL)) {
+            Rotation::setRotationSpeed(-1);
+        }
+        if (EventHandler::isJustPressed(GLFW_KEY_MINUS)) {
+            Rotation::setRotationSpeed(1);
+        }
+
         if (EventHandler::isJustPressed(GLFW_KEY_Z)) {
-            Rotation::rotateLayer(camera, rubik, vec3(0.0f, 1.0f, 0.0f), 90.0f);
+            Rotation::rotateLayer(vec3(0.0f, 1.0f, 0.0f), 90.0f);
         }
+
         if (EventHandler::isJustPressed(GLFW_KEY_X)) {
-            Rotation::rotateLayer(camera, rubik, vec3(0.0f, 0.0f, 1.0f), 90.0f);
+            Rotation::rotateLayer(vec3(0.0f, 0.0f, 1.0f), 90.0f);
         }
         if (EventHandler::isJustPressed(GLFW_KEY_C)) {
-            Rotation::rotateLayer(camera, rubik, vec3(1.0f, 0.0f, 0.0f), 90.0f);
+            Rotation::rotateLayer(vec3(1.0f, 0.0f, 0.0f), 90.0f);
         }
         if (EventHandler::isJustPressed(GLFW_KEY_V)) {
-            Rotation::rotateLayer(camera, rubik, -vec3(0.0f, 1.0f, 0.0f), 90.0f);
+            Rotation::rotateLayer(-vec3(0.0f, 1.0f, 0.0f), 90.0f);
         }
         if (EventHandler::isJustPressed(GLFW_KEY_B)) {
-            Rotation::rotateLayer(camera, rubik, -vec3(0.0f, 0.0f, 1.0f), 90.0f);
+            Rotation::rotateLayer(-vec3(0.0f, 0.0f, 1.0f), 90.0f);
         }
         if (EventHandler::isJustPressed(GLFW_KEY_N)) {
-            Rotation::rotateLayer(camera, rubik, -vec3(1.0f, 0.0f, 0.0f), 90.0f);
+            Rotation::rotateLayer(-vec3(1.0f, 0.0f, 0.0f), 90.0f);
         }
 
-        camera->updateVectors();
-        rubik->drawRubik();
+
+        Camera::updateVectors();
+        Rubik::drawRubik(shader);
+
         Window::swapBuffers();
     }
     Window::terminate();
+
     return 0;
 }

@@ -10,9 +10,9 @@
 
 class FirstLayer {
 public:
-    static void buildWhiteEdges(Camera* camera, Rubik* rubik, int ind);
-    static void buildWhiteLayer(Camera* camera, Rubik* rubik, int ind);
-    static bool isWhiteCrossCorrect(Rubik* rubik);
+    static void buildWhiteEdges(int ind);
+    static void buildWhiteCorners(int ind);
+    static bool isWhiteCrossCorrect();
 };
 
 

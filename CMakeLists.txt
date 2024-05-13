@@ -23,8 +23,20 @@ add_executable(${PROJECT_NAME} main.cpp
         algorithm/Rotation.h
         algorithm/firstLayer/FirstLayer.cpp
         algorithm/firstLayer/FirstLayer.h
-        algorithm/secondLayer/BuildSecondEdges.cpp
-        algorithm/secondLayer/BuildSecondEdges.h
+        algorithm/secondLayer/BuildSecondLayer.cpp
+        algorithm/secondLayer/BuildSecondLayer.h
+        test/Test.cpp
+        test/Test.h
+        algorithm/scramble/Scramble.cpp
+        algorithm/scramble/Scramble.h
+        algorithm/thirdLayer/ThirdLayer.cpp
+        algorithm/thirdLayer/ThirdLayer.h
+        algorithm/RubikAlgorithm.cpp
+        algorithm/RubikAlgorithm.h
+        logger/Logger.cpp
+        logger/Logger.h
+        algorithm/FileReader.cpp
+        algorithm/FileReader.h
 )
 
 target_link_libraries(${PROJECT_NAME}

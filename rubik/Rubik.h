@@ -10,15 +10,23 @@
 
 #include <vector>
 
-class Rubik : Cube {
-    Camera* camera;
-public:
-    std::vector<std::vector<std::vector<Cube>>> cubes;
-    Rubik(Camera* camera);
 
-    void drawRubik();
-    void rotateLayer(vec3 layer, GLfloat angle);
-    void updateVector(vec3 layer, GLfloat angle);
+class Rubik {
+    static std::vector<std::vector<std::vector<Cube>>> cubes;
+public:
+
+    static vec3 U;
+    static vec3 D;
+    static vec3 R;
+    static vec3 L;
+    static vec3 F;
+    static vec3 B;
+
+    static void init();
+    static void drawRubik(Shader* shader);
+    static void rotateLayer(vec3 layer, GLfloat angle);
+    static void updateVector(vec3 layer, GLfloat angle);
+    static Cube* getCube(vec3 pos);
 
 };
 

@@ -7,18 +7,24 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 class Shader {
-public:
     unsigned int id;
+    GLuint VBO;
 
-    Shader(unsigned int id);
+public:
+    GLuint VAO;
+
+
+    Shader(std::string vertexFile, std::string fragmentFile);
     ~Shader();
 
     void use();
     void uniformMatrix(std::string name, glm::mat4 matrix);
 };
 
-extern Shader* load_shader(std::string vertexFile, std::string fragmentFile);
+extern int load_shader(std::string vertexFile, std::string fragmentFile);
 
 #endif //SHADER_H

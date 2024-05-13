@@ -19,39 +19,27 @@ using namespace glm;
 
 class Cube {
 
-
-
-    GLuint VAO;
-    GLuint VBO;
-
-    Shader* shader;
-    Camera* camera;
-public:
-
     vec3 up = vec3(0.0f, 1.0f, 0.0f);
     vec3 front = vec3(0.0f, 0.0f, 1.0f);
     vec3 right = vec3(1.0f, 0.0f, 0.0f);
 
-    vec3 white = up;
-    vec3 orange = front;
-    vec3 green = right;
-
-
     mat4 model = mat4(1.0f);
+    mat4 rotm = mat4(1.0f);
+    mat4 trnm = mat4(1.0f);
     vec3 offset = vec3(0);
+public:
 
-    int index;
+    int index{};
 
-    Cube(Camera* camera);
     Cube();
     ~Cube();
 
 
-    void drawCube();
+    void drawCube(Shader* shader);
     void rotateCube(GLfloat angle, vec3 rotationAxis);
     void moveCube(vec3 offset);
     void updateVectors(vec3 rotationAxis, GLfloat angle);
-
+    vec3 getVector(vec3 vector);
 };
 
 

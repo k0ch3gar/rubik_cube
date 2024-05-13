@@ -4,105 +4,103 @@
 
 #include "FirstLayer.h"
 
-void FirstLayer::buildWhiteEdges(Camera* camera, Rubik *rubik, int ind) {
+void FirstLayer::buildWhiteEdges(int ind) {
 
-    vec3 pos = BasicAlgorithm::findCube(*rubik, ind);
-    //std::cout << pos.x << ' ' << pos.y << ' ' << pos.z << '\n';
-    Cube* cube = &rubik->cubes[pos.x][pos.y][pos.z];
-    if (pos.y != 1 && (cube->up != vec3(0.0f, 1.0f, 0.0f) && cube->up != vec3(0.0f, -1.0f, 0.0f))) {
-        Rotation::rotateLayer(camera, rubik, cube->up, 90.0f);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+    vec3 pos = BasicAlgorithm::findCube(ind);
+    Cube* cube = Rubik::getCube(pos);
+    if (pos.y != 1 && (cube->getVector(Rubik::U) != Rubik::U && cube->getVector(Rubik::U) != Rubik::D)) {
+        Rotation::rotateLayer(cube->getVector(Rubik::U), 90.0f);
+        pos = BasicAlgorithm::findCube(ind);
+        cube = Rubik::getCube(pos);
 
-        Rotation::rotateLayer(camera, rubik, BasicAlgorithm::getIndVec(cube, ind), 90.0f);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+        Rotation::rotateLayer(BasicAlgorithm::getIndVec(cube, ind), 90.0f);
+        pos = BasicAlgorithm::findCube(ind);
+        cube = Rubik::getCube(pos);
     }
 
-    while (cube->up != vec3(0.0f, -1.0f, 0.0f)) {
+    while (cube->getVector(Rubik::U) != Rubik::D) {
 
-        Rotation::rotateLayer(camera, rubik, BasicAlgorithm::getIndVec(cube, ind), 90.0f);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+        Rotation::rotateLayer(BasicAlgorithm::getIndVec(cube, ind), 90.0f);
+        pos = BasicAlgorithm::findCube( ind);
+        cube = Rubik::getCube(pos);
     }
 
     if (ind == 7 || ind == 25) {
-        while (cube->right != vec3(1.0f, 0.0f, 0.0f)) {
-            Rotation::rotateLayer(camera, rubik, cube->up, 90.0f);
-            pos = BasicAlgorithm::findCube(*rubik, ind);
-            cube = &rubik->cubes[pos.x][pos.y][pos.z];
+        while (cube->getVector(Rubik::R) != Rubik::R) {
+            Rotation::rotateLayer( cube->getVector(Rubik::U), 90.0f);
+            pos = BasicAlgorithm::findCube(ind);
+            cube = Rubik::getCube(pos);
         }
     }
     else {
-        while (cube->front != vec3(0.0f, 0.0f, 1.0f)) {
-            Rotation::rotateLayer(camera, rubik, cube->up, 90.0f);
-            pos = BasicAlgorithm::findCube(*rubik, ind);
-            cube = &rubik->cubes[pos.x][pos.y][pos.z];
+        while (cube->getVector(Rubik::F) != Rubik::F) {
+            Rotation::rotateLayer( cube->getVector(Rubik::U), 90.0f);
+            pos = BasicAlgorithm::findCube( ind);
+            cube = Rubik::getCube(pos);
         }
     }
 
-    while (cube->up != vec3(0.0f, 1.0f, 0.0f)) {
-        Rotation::rotateLayer(camera, rubik, BasicAlgorithm::getIndVec(cube, ind), 90.0f);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+    while (cube->getVector(Rubik::U) != Rubik::U) {
+        Rotation::rotateLayer( BasicAlgorithm::getIndVec(cube, ind), 90.0f);
+        pos = BasicAlgorithm::findCube( ind);
+        cube = Rubik::getCube(pos);
     }
 }
 
-bool FirstLayer::isWhiteCrossCorrect(Rubik *rubik) {
-    vec3 pos = BasicAlgorithm::findCube(*rubik, 7);
-    Cube* cube = &rubik->cubes[pos.x][pos.y][pos.z];
-    if (!(cube->up == vec3(0.0f, 1.0f, 0.0f) && pos == vec3(0, 2, 1))) {
+bool FirstLayer::isWhiteCrossCorrect() {
+    vec3 pos = BasicAlgorithm::findCube( 7);
+    Cube* cube = Rubik::getCube(pos);
+    if (!(cube->getVector(Rubik::U) == Rubik::U && pos == vec3(0, 2, 1))) {
         return false;
     }
-    pos = BasicAlgorithm::findCube(*rubik, 15);
-    cube = &rubik->cubes[pos.x][pos.y][pos.z];
-    if (!(cube->up == vec3(0.0f, 1.0f, 0.0f) && pos == vec3(1, 2, 0))) {
+    pos = BasicAlgorithm::findCube( 15);
+    cube = Rubik::getCube(pos);
+    if (!(cube->getVector(Rubik::U) == Rubik::U && pos == vec3(1, 2, 0))) {
         return false;
     }
-    pos = BasicAlgorithm::findCube(*rubik, 17);
-    cube = &rubik->cubes[pos.x][pos.y][pos.z];
-    if (!(cube->up == vec3(0.0f, 1.0f, 0.0f) && pos == vec3(1, 2, 2))) {
+    pos = BasicAlgorithm::findCube(17);
+    cube = Rubik::getCube(pos);
+    if (!(cube->getVector(Rubik::U) == Rubik::U && pos == vec3(1, 2, 2))) {
         return false;
     }
-    pos = BasicAlgorithm::findCube(*rubik, 25);
-    cube = &rubik->cubes[pos.x][pos.y][pos.z];
-    if (!(cube->up == vec3(0.0f, 1.0f, 0.0f) && pos == vec3(2, 2, 1))) {
+    pos = BasicAlgorithm::findCube(25);
+    cube = Rubik::getCube(pos);
+    if (!(cube->getVector(Rubik::U) == Rubik::U && pos == vec3(2, 2, 1))) {
         return false;
     }
 
     return true;
 }
 
-void FirstLayer::buildWhiteLayer(Camera *camera, Rubik *rubik, int ind) {
-    vec3 pos = BasicAlgorithm::findCube(*rubik, ind);
-    Cube* cube = &rubik->cubes[pos.x][pos.y][pos.z];
-    vec3 axisR, axisU = vec3(0.0f, -1.0f, 0.0f);
+void FirstLayer::buildWhiteCorners(int ind) {
+    vec3 pos = BasicAlgorithm::findCube(ind);
+    Cube* cube = Rubik::getCube(pos);
+    vec3 axisR, axisU = Rubik::D;
     if (pos.y == 2) {
         if (pos.x == pos.z) {
-            axisR = (pos.x == 2 ? vec3(0.0f, 0.0f, 1.0f) : -vec3(0.0f, 0.0f, 1.0f));
+            axisR = (pos.x == 2 ? Rubik::F : Rubik::B);
         } else {
-            axisR = (pos.x == 2 ? vec3(1.0f, 0.0f, 0.0f) : -vec3(1.0f, 0.0f, 0.0f));
+            axisR = (pos.x == 2 ? Rubik::R : Rubik::L);
         }
-        BasicAlgorithm::pifPaf(camera, rubik, axisR, axisU);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+        BasicAlgorithm::pifPaf(axisR, axisU);
+        pos = BasicAlgorithm::findCube(ind);
+        cube = Rubik::getCube(pos);
     }
     vec3 rPos = BasicAlgorithm::getIndVec(cube, ind);
-    //std::cout << rPos.x << ' ' << rPos.y << ' ' << rPos.z << '\n';
     while (pos.x != rPos.x || pos.z != rPos.z) {
-        Rotation::rotateLayer(camera, rubik, vec3(0.0f, -1.0f, 0.0f), 90.0f);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+        Rotation::rotateLayer( Rubik::D, 90.0f);
+        pos = BasicAlgorithm::findCube( ind);
+        cube = Rubik::getCube(pos);
     }
     if (rPos.x == rPos.z) {
-        axisR = (rPos.x == 2 ? vec3(0.0f, 0.0f, 1.0f) : -vec3(0.0f, 0.0f, 1.0f));
+        axisR = (rPos.x == 2 ? Rubik::F : Rubik::B);
     } else {
-        axisR = (rPos.x == 2 ? vec3(1.0f, 0.0f, 0.0f) : -vec3(1.0f, 0.0f, 0.0f));
+        axisR = (rPos.x == 2 ? Rubik::R : Rubik::L);
     }
-    axisU = vec3(0.0f, -1.0f, 0.0f);
-    while (cube->up != vec3(0.0f, 1.0f, 0.0f)) {
-        BasicAlgorithm::pifPaf(camera, rubik, axisR, axisU);
-        pos = BasicAlgorithm::findCube(*rubik, ind);
-        cube = &rubik->cubes[pos.x][pos.y][pos.z];
+    axisU = Rubik::D;
+    while (cube->getVector(Rubik::U) != Rubik::U) {
+        BasicAlgorithm::pifPaf( axisR, axisU);
+        pos = BasicAlgorithm::findCube( ind);
+        cube = Rubik::getCube(pos);
     }
 }

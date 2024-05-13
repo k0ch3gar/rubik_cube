@@ -18,17 +18,14 @@
 #include "../Rotation.h"
 
 class BasicAlgorithm {
-    //Camera* camera;
-    //Rubik* rubik;
 public:
-
-    static void pifPaf(Camera* camera, Rubik* rubik, vec3 axisR, vec3 axisU);
-    static void secondEdgePlacementR(Camera* camera, Rubik* rubik, vec3 axisR, vec3 axisU, vec3 axisF);
-    static void secondEdgePlacementL(Camera* camera, Rubik* rubik, vec3 axisL, vec3 axisU, vec3 axisF);
-    static void yellowEdgesFlip(Camera* camera, Rubik* rubik, vec3 axisR, vec3 axisU, vec3 axisF, int type);
-    static void moveYellowEdges(Camera* camera, Rubik* rubik, vec3 axisR, vec3 axisU);
-    static void moveYellowCorners(Camera* camera, Rubik* rubik, vec3 axisR, vec3 axisU, vec3 axisL);
-    static vec3 findCube(Rubik& rubik, int index);
+    static void pifPaf(vec3 axisR, vec3 axisU);
+    static void secondEdgePlacementR(vec3 axisR, vec3 axisU, vec3 axisF);
+    static void secondEdgePlacementL(vec3 axisL, vec3 axisU, vec3 axisF);
+    static void yellowEdgesFlip(vec3 axisR, vec3 axisU, vec3 axisF, int type);
+    static void moveYellowEdges(vec3 axisR, vec3 axisU);
+    static void moveYellowCorners(vec3 axisR, vec3 axisU, vec3 axisL);
+    static vec3 findCube(int index);
     static vec3 getIndVec(Cube* cube, int ind);
 };
 

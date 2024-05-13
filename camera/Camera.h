@@ -11,25 +11,25 @@ using namespace glm;
 
 
 class Camera {
+    static vec3 up;
+    static vec3 object;
+    static vec3 position;
+
+    static float fov;
+    static float distance;
+    static float pitch;
+    static float yaw;
+
+    static float speed;
 public:
-    void updateVectors();
+    static void updateVectors();
 
-    vec3 eye;
-    vec3 up;
-    vec3 object;
+    static void init(vec3 dposition, float dfov, float ddistance);
+    static void setCameraAngle(float dpitch, float dyaw);
+    static void setCameraSpeed(float dspeed);
 
-    float fov;
-    float distance;
-    float pitch;
-    float yaw;
-
-    vec3 position;
-    Camera(vec3 position, float fov, float distance);
-
-    void setCameraAngle(float pitch, float yaw);
-
-    mat4 getProjection();
-    mat4 getView();
+    static mat4 getProjection();
+    static mat4 getView();
 };
 
 

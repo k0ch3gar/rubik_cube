@@ -4,7 +4,7 @@
 
 #include "Shader.h"
 
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <fstream>
@@ -14,9 +14,51 @@
 
 #include "glm/gtc/type_ptr.inl"
 
-Shader::Shader(unsigned id) : id(id) {
+float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-}
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.9f, 0.5f, 0.05f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.9f, 0.5f, 0.05f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.9f, 0.5f, 0.05f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.9f, 0.5f, 0.05f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.9f, 0.5f, 0.05f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.9f, 0.5f, 0.05f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+};
+
+
 
 Shader::~Shader() {
     glDeleteProgram(id);
@@ -31,7 +73,25 @@ void Shader::uniformMatrix(std::string name, glm::mat4 matrix) {
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-Shader* load_shader(std::string vertexFile, std::string fragmentFile) {
+Shader::Shader(std::string vertexFile, std::string fragmentFile) {
+    id = load_shader(vertexFile, fragmentFile);
+
+    glGenVertexArrays(1, &VAO);
+
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+}
+
+int load_shader(std::string vertexFile, std::string fragmentFile) {
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -55,7 +115,7 @@ Shader* load_shader(std::string vertexFile, std::string fragmentFile) {
     }
     catch(std::ifstream::failure& e) {
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
-        return nullptr;
+        return -1;
     }
 
     const GLchar* vShaderCode = vertexCode.c_str();
@@ -73,7 +133,7 @@ Shader* load_shader(std::string vertexFile, std::string fragmentFile) {
         glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
         std::cerr << infoLog << '\n';
         glDeleteShader(vertex);
-        return nullptr;
+        return -1;
     }
 
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -86,7 +146,7 @@ Shader* load_shader(std::string vertexFile, std::string fragmentFile) {
 
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        return nullptr;
+        return -1;
     }
 
     GLuint id = glCreateProgram();
@@ -102,12 +162,12 @@ Shader* load_shader(std::string vertexFile, std::string fragmentFile) {
         glDeleteShader(vertex);
         glDeleteShader(fragment);
         glDeleteShader(id);
-        return nullptr;
+        return -1;
     }
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
-    return new Shader(id);
+    return id;
 }
 
